@@ -9,6 +9,7 @@ This is a collection of tools working with the
 Generators
 ----------
 
+- `ff-color` A static color generator
 - `ff-cosgen` A cos-wave generator (x-direction)
 - `ff-singen` A sinewave generator (x-direction)
 
@@ -48,6 +49,8 @@ Generators do not have input images, they just produce images from scratch
 
 - `ff-cosgen width height steps`. Output: image (width x height)
 - `ff-singen width height steps`. Output: image (width x height)
+- `ff-color width height red green blue [alpha]`. Output: image (width x
+  height)
 
 Functions
 ---------
