@@ -1,8 +1,8 @@
 include config.mk
 
 CFLAGS_ADD= -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic
-SRC= ff-singen.c ff-cosgen.c ff-mul.c ff-gamma.c ff-color.c
-TOOLS= $(OUT)/ff-singen $(OUT)/ff-cosgen $(OUT)/ff-mul $(OUT)/ff-gamma $(OUT)/ff-color
+SRC= ff-singen.c ff-cosgen.c ff-mul.c ff-gamma.c ff-color.c ff-chuffle.c
+TOOLS= $(OUT)/ff-singen $(OUT)/ff-cosgen $(OUT)/ff-mul $(OUT)/ff-gamma $(OUT)/ff-color $(OUT)/ff-chuffle
 
 .PHONY: all
 all: options $(OUT) $(TOOLS)
@@ -47,5 +47,9 @@ $(OUT)/ff-gamma: ff-gamma.c
 	@echo " → $@ compiled"
 
 $(OUT)/ff-color: ff-color.c
+	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
+	@echo " → $@ compiled"
+
+$(OUT)/ff-chuffle: ff-chuffle.c
 	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
 	@echo " → $@ compiled"

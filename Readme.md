@@ -26,6 +26,7 @@ Generators
 Functions
 ---------
 
+- `ff-chuffle` A channel shuffler
 - `ff-mul` A multiplication tool
 
 Corrections
@@ -57,14 +58,21 @@ Generators
 Generators do not have input images, they just produce images from scratch
 (and a few parameters).
 
-- `ff-cosgen width height steps`. Output: image (width x height)
-- `ff-singen width height steps`. Output: image (width x height)
-- `ff-color width height red green blue [alpha]`. Output: image (width x
+- `ff-color width height red green blue [alpha]`. Output: Image (width x
   height)
+- `ff-cosgen width height steps`. Output: Image (width x height)
+- `ff-singen width height steps`. Output: Image (width x height)
 
 Functions
 ---------
 
+- `ff-chuffle r g b a`.  
+  Input: Image  
+  Output: Image with shuffled rgba channels  
+  Examples:
+  - `cat image.ff | ff-chuffle g b r a > result.ff` (rotates rgb)
+  - `cat image.ff | ff-chuffle g g r a > result.ff` (fill more channels,
+    discard others)
 - `ff-mul`.  
   Input: Two images with the exact same size.  
   Output: Multiplication result.  
