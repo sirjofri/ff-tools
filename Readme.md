@@ -32,11 +32,11 @@ General Usage
 All of these tools have their input via `stdin` and output to `stdout`. So you
 should use the like this:
 
-   cat image.ff | ff-tool [parameters] | viewer
+    cat image.ff | ff-tool [parameters] | viewer
 
 For example to view a `.png` file with lel and basic gamma applied:
 
-   cat file.png | png2ff | ff-gamma | lel
+    cat file.png | png2ff | ff-gamma | lel
 
 (assuming you have [farbfeld](https://tools.suckless.org/farbfeld/) and
 [lel](http://git.2f30.org/lel/) installed)
