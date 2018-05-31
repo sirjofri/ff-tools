@@ -1,6 +1,10 @@
 ff-tools
 ========
 
+![Sample image](demo.png)
+
+Sample image: `cat <( cat <(ff-cosgen 512 512 3) <(ff-singen 512 512 5) | ff-mul ) <(ff-color 512 512 0.8 0.9 0.2) | ff-mul`
+
 **A collection of farbfeld tools**
 
 This is a collection of tools working with the
