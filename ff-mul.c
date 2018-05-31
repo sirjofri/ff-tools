@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 	b_width = ntohl(b_hdr[2]);
 	b_height = ntohl(b_hdr[3]);
 
-	if (a_width != b_width || a_height != a_width) {
+	if (a_width != b_width || a_height != b_height) {
 		fprintf(stderr, "%s: different image sizes\n", argv[0]);
 		return 1;
 	}
