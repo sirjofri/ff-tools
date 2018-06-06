@@ -29,16 +29,20 @@ int main(int argc, char **argv)
 	}
 
 	ret = ff_print_header(&width, &height);
-	if (ff_err(ret) != 0)
+	if (ret != 0) {
+		ff_err(ret);
 		return ret;
+	}
 
-	for(uint32_t y=0; y<height; y++)
-		for(uint32_t x=0; x<width; x++) {
-			uint16_t value = get_pixel_value(x, y);
-			ret = ff_print_bw(&value);
-			if (ff_err(ret) != 0)
-				return ret;
+	FOR_X_Y(width, height,
+		uint16_t value = get_pixel_value(x, y);
+		ret = ff_print_bw(&value);
+		if (ret != 0) {
+			ff_err(ret);
+			return ret;
 		}
+	)
+
 	return 0;
 }
 

@@ -41,8 +41,10 @@ int main(int argc, char **argv)
 	height = ntohl(hdr[3]);
 
 	ret = ff_print_header(&width, &height);
-	if (ff_err(ret) != 0)
+	if (ret != 0) {
+		ff_err(ret);
 		return ret;
+	}
 
 	for(uint32_t x=0; x<height*width*4; x++) {
 		if (fread(&in, sizeof(uint16_t), 1, stdin) != 1) {
@@ -51,8 +53,10 @@ int main(int argc, char **argv)
 		}
 		gamma(in, &result);
 		ret = ff_print_value(&result);
-		if (ff_err(ret) != 0)
+		if (ret != 0) {
+			ff_err(ret);
 			return ret;
+		}
 	}
 	return 0;
 }

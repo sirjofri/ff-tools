@@ -52,18 +52,22 @@ int main(int argc, char **argv)
 	height = ntohl(hdr[3]);
 
 	ret = ff_print_header(&width, &height);
-	if (ff_err(ret) != 0)
+	if (ret != 0) {
+		ff_err(ret);
 		return ret;
+	}
 
-	for (uint32_t x=0; x<height*width; x++) {
+	FOR_X_Y(width, height,
 		if (fread(in_pixel, sizeof(*in_pixel), LEN(in_pixel), stdin) != LEN(in_pixel)) {
 			fprintf(stderr, "Error: can not read input image\n");
 			return READERR;
 		}
 		ret = print_shuffled(in_pixel);
-		if (ff_err(ret) != 0)
+		if (ret != 0) {
+			ff_err(ret);
 			return ret;
-	}
+		}
+	)
 	return 0;
 }
 

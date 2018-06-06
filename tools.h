@@ -31,3 +31,5 @@ int ff_print_bw(uint16_t *bw_value);
 
 int ff_err_msg(int error, char *message);
 int ff_err(int error);
+
+#define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}

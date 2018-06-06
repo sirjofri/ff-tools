@@ -1,0 +1,102 @@
+.TH tools.h l "DATE" "Version VNUM" "Library Functions"
+.SH NAME
+tools.h \- ff-tools library functions
+.SH SYNOPSIS
+.B #include \(dqtools.h\(dq
+.PP
+.B M_PI
+.br
+.B USERERR
+.br
+.B READERR
+.br
+.B WRITERR
+.PP
+.B int ff_print_header(uint32_t *\fIwidth\fB, uint32_t *\fIheight\fB);
+.br
+.B int ff_print_rgba(uint16_t *\fIrgba\fB);
+.br
+.B int ff_print_value(uint16_t *\fIvalue\fB);
+.br
+.B int ff_print_bw(uint16_t *\fIbw_value\fB);
+.PP
+.B int ff_err_msg(int \fIerror\fB, \fBchar *\fImessage\fB);
+.br
+.B int ff_err(int \fIerror\fB);
+.PP
+.B LEN(\fIx\fB)
+.br
+.B FOR_X_Y(\fIwidth\fR, \fIheight\fR, fIbody\fB)
+.SH DESCRIPTION
+.B M_PI
+is the constant PI (3.14159...).
+.B USERERR\fR, \fBREADERR\fR, \fBWRITERR
+are predefined error codes.
+Functions that start with
+.B ff_print_
+return one of these error codes.
+These error codes can automatically produce some apropriate output to
+.I stderr
+with the
+.B ff_err
+functions (\fBff_err_msg\fR is able to output a custom \fImessage\fR, too).
+.PP
+A working example would be:
+.PP
+.nf
+.RS
+int ret = ff_print_value(value);
+if (ret != 0) {
+	ff_err(ret);
+	return ret;
+}
+.RE
+.fi
+.PP
+The \fBLEN()\fR macro is equivalent to the length of the given array.
+.PP
+The \fBFOR_X_Y()\fR macro produces a for loop for iterating over every pixel of an image. The input
+.PP
+.nf
+.RS
+FOR_X_Y(width, height,
+	// Loop body
+)
+.RE
+.fi
+.PP
+produces
+.PP
+.nf
+.RS
+for (uint32_t y=0; y<height; y++)
+	for (uint32_t x=0; x<width; x++) {
+		// Loop body
+	}
+.RE
+.fi
+.PP
+All \fBff_print\fR functions output directly to \fIstdout\fR.
+.PP
+.B ff_print_header()
+prints a valid \fIfarbfeld\fR header with the correct \fIwidth\fR and \fIheight\fR.
+.PP
+.B ff_print_rgba()
+prints the given \fIrgba\fR pixel.
+.PP
+.B ff_print_value()
+prints the given \fIvalue\fR as a simple value (not a full pixel).
+This is useful if you can stream in data, process it channel by channel and output it without going pixel by pixel.
+.PP
+.B ff_print_bw()
+prints the given \fIbw_value\fR as a full pixel.
+It creates a pixel with RGBA\ =\ (\fIbw_value\fR, \fIbw_value\fR, \fIbw_value\fR, \fBUINT16_MAX\fR) and outputs it.
+.SH NOTES
+This library is in heavy development and can change every day!
+.SH BUGS
+I'm pretty sure there are some. Feel free to report/fix them.
+.SH AUTHOR
+The author of this package is known as \fIsirjofri\fR and the source is hosted
+.UR https://\:github.com/\:sirjofri/\:ff-tools/
+here
+.UE . Feel free to contribute and fork it.
