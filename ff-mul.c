@@ -10,6 +10,8 @@ int main(int argc, char **argv)
 	         a_height, b_height;
 	uint16_t result;
 	uint16_t *a, *b;
+	a = 0x0;
+	b = 0x0;
 
 	if (argc != 1) {
 		fprintf(stderr, "Usage: %s\n", argv[0]);
@@ -31,6 +33,10 @@ int main(int argc, char **argv)
 
 	/* Read A file content */
 	a = (uint16_t *) malloc(a_width * a_height * sizeof(uint16_t) * 4);
+	if (a == 0x0) {
+		fprintf(stderr, "Error: can not allocate memory\n");
+		return 4;
+	}
 	if (fread(a, sizeof(uint16_t), a_width*a_height*4, stdin) != a_width*a_height*4) {
 		fprintf(stderr, "Error: can not read file (A)\n");
 		free(a);
@@ -61,6 +67,10 @@ int main(int argc, char **argv)
 
 	/* Read B file content */
 	b = (uint16_t *) malloc(b_width * b_height * sizeof(uint16_t) * 4);
+	if (b == 0x0) {
+		fprintf(stderr, "Error: can not allocate memory\n");
+		return 4;
+	}
 	if (fread(b, sizeof(uint16_t), b_width*b_height*4, stdin) != b_width*b_height*4) {
 		fprintf(stderr, "Error: can not read (B)\n");
 		free(a);
