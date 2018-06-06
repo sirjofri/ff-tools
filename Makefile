@@ -1,11 +1,11 @@
 include config.mk
 
 CFLAGS_ADD= -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic
-SRC= ff-singen.c ff-cosgen.c ff-mul.c ff-gamma.c ff-color.c ff-chuffle.c
-TOOLS= $(OUT)/ff-singen $(OUT)/ff-cosgen $(OUT)/ff-mul $(OUT)/ff-gamma $(OUT)/ff-color $(OUT)/ff-chuffle
+TOOLS=ff-chuffle ff-color ff-cosgen ff-gamma ff-mul ff-singen
+DEPS= tools.h
 
 .PHONY: all
-all: options $(OUT) $(TOOLS)
+all: options $(OUT) $(addprefix $(OUT)/,$(TOOLS))
 
 .PHONY: options
 options:
@@ -16,13 +16,14 @@ options:
 
 .PHONY: clean
 clean:
-	@rm $(TOOLS)
+	@rm -rf $(OUT) 2>/dev/null >/dev/null
+	@echo " → Cleaned workspace directory"
 
 .PHONY: dist
 dist: clean
 	@echo " → make distribution pack"
 	@mkdir -p ff-tools-$(VERSION)
-	@cp -R Makefile Readme.md config.mk $(SRC) ff-tools-$(VERSION)
+	@cp -R Makefile Readme.md config.mk *.c *.h ff-tools-$(VERSION)
 	@tar -cf ff-tools-$(VERSION).tar ff-tools-$(VERSION)
 	@gzip ff-tools-$(VERSION).tar
 	@rm -rf ff-tools-$(VERSION)
@@ -30,26 +31,13 @@ dist: clean
 $(OUT):
 	@mkdir -p $@
 
-$(OUT)/ff-singen: ff-singen.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
+$(OUT)/tools.o: tools.c tools.h
+	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ -c $<
 	@echo " → $@ compiled"
 
-$(OUT)/ff-cosgen: ff-cosgen.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
+$(OUT)/%.o: %.c $(DEPS)
+	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ -c $<
 	@echo " → $@ compiled"
 
-$(OUT)/ff-mul: ff-mul.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
-	@echo " → $@ compiled"
-
-$(OUT)/ff-gamma: ff-gamma.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
-	@echo " → $@ compiled"
-
-$(OUT)/ff-color: ff-color.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
-	@echo " → $@ compiled"
-
-$(OUT)/ff-chuffle: ff-chuffle.c
-	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $<
-	@echo " → $@ compiled"
+$(OUT)/%: $(OUT)/%.o tools.o
+	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $< tools.o
