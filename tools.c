@@ -1,12 +1,19 @@
 #include "tools.h"
 
+/*void
+set_c(Coords c, uint32_t x, uint32_t y)
+{
+	c.x = x;
+	c.y = y;
+}*/
+
 int
-ff_print_header(uint32_t *width, uint32_t *height)
+ff_print_header(Coords size)
 {
 	printf("farbfeld");
 	uint32_t wh[2];
-	wh[0] = ntohl(*width);
-	wh[1] = ntohl(*height);
+	wh[0] = ntohl(size.x);
+	wh[1] = ntohl(size.y);
 
 	if (fwrite(wh, sizeof(*wh), LEN(wh), stdout) != LEN(wh))
 		return 3;
@@ -14,9 +21,15 @@ ff_print_header(uint32_t *width, uint32_t *height)
 }
 
 int
-ff_print_rgba(uint16_t *rgba)
+ff_print_rgba(Rgba rgba)
 {
-	if (fwrite(rgba, sizeof(uint16_t), 4, stdout) != 4)
+	uint16_t r[4];
+	r[0] = rgba.r;
+	r[1] = rgba.g;
+	r[2] = rgba.b;
+	r[3] = rgba.a;
+
+	if (fwrite(r, sizeof(uint16_t), 4, stdout) != 4)
 		return 3;
 	return 0;
 }
@@ -77,4 +90,24 @@ ff_err(int error)
 	default:
 		return 0;
 	}
+}
+
+Coords
+ff_get_rel_coords(Coords pos,
+                  Coords size,
+                  Coords rel_pos)
+{
+	Coords c;
+
+	if (pos.x%size.x+rel_pos.x < 0)
+		c.x = (pos.x+size.x+rel_pos.x)%size.x;
+	else
+		c.x = (pos.x+rel_pos.x)%size.x;
+
+	if (pos.y%size.y+rel_pos.y < 0)
+		c.y = (pos.y+size.y+rel_pos.y)%size.y;
+	else
+		c.y = (pos.y+rel_pos.y)%size.y;
+
+	return c;
 }

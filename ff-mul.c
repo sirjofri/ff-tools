@@ -5,9 +5,9 @@ void multiply(uint16_t a, uint16_t b, uint16_t *c);
 int main(int argc, char **argv)
 {
 	int ret;
-	uint32_t a_hdr[4], b_hdr[4],
-	         a_width,  b_width,
-	         a_height, b_height;
+	Coords a_size, b_size;
+
+	uint32_t a_hdr[4], b_hdr[4];
 	uint16_t result;
 	uint16_t *a, *b;
 	a = 0x0;
@@ -28,16 +28,15 @@ int main(int argc, char **argv)
 		return USERERR;
 	}
 
-	a_width = ntohl(a_hdr[2]);
-	a_height = ntohl(a_hdr[3]);
+	set_c(a_size, ntohl(a_hdr[2]), ntohl(a_hdr[3]));
 
 	/* Read A file content */
-	a = (uint16_t *) malloc(a_width * a_height * sizeof(uint16_t) * 4);
+	a = (uint16_t *) malloc(a_size.x * a_size.y * sizeof(uint16_t) * 4);
 	if (a == 0x0) {
 		fprintf(stderr, "Error: can not allocate memory\n");
 		return 4;
 	}
-	if (fread(a, sizeof(uint16_t), a_width*a_height*4, stdin) != a_width*a_height*4) {
+	if (fread(a, sizeof(uint16_t), a_size.x*a_size.y*4, stdin) != a_size.x*a_size.y*4) {
 		fprintf(stderr, "Error: can not read file (A)\n");
 		free(a);
 		return READERR;
@@ -56,29 +55,28 @@ int main(int argc, char **argv)
 		return USERERR;
 	}
 
-	b_width = ntohl(b_hdr[2]);
-	b_height = ntohl(b_hdr[3]);
+	set_c(b_size, ntohl(b_hdr[2]), ntohl(b_hdr[3]));
 
-	if (a_width != b_width || a_height != b_height) {
+	if (a_size.x != b_size.x || a_size.y != b_size.y) {
 		fprintf(stderr, "%s: different image sizes\n", argv[0]);
 		free(a);
 		return USERERR;
 	}
 
 	/* Read B file content */
-	b = (uint16_t *) malloc(b_width * b_height * sizeof(uint16_t) * 4);
+	b = (uint16_t *) malloc(b_size.x * b_size.y * sizeof(uint16_t) * 4);
 	if (b == 0x0) {
 		fprintf(stderr, "Error: can not allocate memory\n");
 		return 4;
 	}
-	if (fread(b, sizeof(uint16_t), b_width*b_height*4, stdin) != b_width*b_height*4) {
+	if (fread(b, sizeof(uint16_t), b_size.x*b_size.y*4, stdin) != b_size.x*b_size.y*4) {
 		fprintf(stderr, "Error: can not read (B)\n");
 		free(a);
 		free(b);
 		return READERR;
 	}
 
-	ret = ff_print_header(&a_width, &a_height);
+	ret = ff_print_header(a_size);
 	if (ff_err(ret) != 0) {
 		free(a);
 		free(b);
@@ -86,7 +84,7 @@ int main(int argc, char **argv)
 	}
 
 	/* Calculate and output data */
-	for(uint32_t x=0; x<a_height*a_width*2*sizeof(uint16_t); x++) {
+	for(uint32_t x=0; x<a_size.y*a_size.x*2*sizeof(uint16_t); x++) {
 		multiply(ntohs(*(a+x)), ntohs(*(b+x)), &result);
 		ret = ff_print_value(&result);
 		if (ff_err(ret) != 0) {

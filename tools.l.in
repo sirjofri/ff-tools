@@ -12,9 +12,15 @@ tools.h \- ff-tools library functions
 .br
 .B WRITERR
 .PP
-.B int ff_print_header(uint32_t *\fIwidth\fB, uint32_t *\fIheight\fB);
+.B typedef struct Coords;
 .br
-.B int ff_print_rgba(uint16_t *\fIrgba\fB);
+.B set_c(\fICoords\fB, \fIuint32_t x\fB, \fIuint32_t y\fB);
+.br
+.B typedef struct Rgba;
+.PP
+.B int ff_print_header(Coords \fIsize\fB);
+.br
+.B int ff_print_rgba(Rgba \fIrgba\fB);
 .br
 .B int ff_print_value(uint16_t *\fIvalue\fB);
 .br
@@ -24,10 +30,17 @@ tools.h \- ff-tools library functions
 .br
 .B int ff_err(int \fIerror\fB);
 .PP
+.B Coords ff_get_rel_coords(Coords \fIpos\fB, Coords \fIsize\fB, Coords \fIrel_pos\fB);
+.PP
 .B LEN(\fIx\fB)
 .br
 .B FOR_X_Y(\fIwidth\fR, \fIheight\fR, fIbody\fB)
 .SH DESCRIPTION
+.B Coords
+and
+.B Rgba
+are predefined structs that contain coordinates (x, y) and rgba values (r, g, b, a). According to the \fBfarbfeld\fR definition the coordinates are \fBuint32_t\fR values while rgba uses \fBuint16_t\fR types. Please note that \fBset_c\fR is actually a macro (no type checking).
+.PP
 .B M_PI
 is the constant PI (3.14159...).
 .B USERERR\fR, \fBREADERR\fR, \fBWRITERR
@@ -79,7 +92,7 @@ for (uint32_t y=0; y<height; y++)
 All \fBff_print\fR functions output directly to \fIstdout\fR.
 .PP
 .B ff_print_header()
-prints a valid \fIfarbfeld\fR header with the correct \fIwidth\fR and \fIheight\fR.
+prints a valid \fBfarbfeld\fR header with the correct \fIsize\fR \fBCoords\fR.
 .PP
 .B ff_print_rgba()
 prints the given \fIrgba\fR pixel.
@@ -91,6 +104,9 @@ This is useful if you can stream in data, process it channel by channel and outp
 .B ff_print_bw()
 prints the given \fIbw_value\fR as a full pixel.
 It creates a pixel with RGBA\ =\ (\fIbw_value\fR, \fIbw_value\fR, \fIbw_value\fR, \fBUINT16_MAX\fR) and outputs it.
+.PP
+.B ff_get_rel_coords()
+calculates the correct position relative to \fIpos\fB of the image with the given \fIsize\fR and relative coordinates \fIrel_pos\fB. This function is mainly used internally, but you can use it outside as well.
 .SH NOTES
 This library is in heavy development and can change every day!
 .SH BUGS

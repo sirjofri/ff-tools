@@ -20,8 +20,22 @@
 
 #define LEN(x) (sizeof (x) / sizeof *(x))
 
-int ff_print_header(uint32_t *width, uint32_t *height);
-int ff_print_rgba(uint16_t *rgba);
+typedef struct Coords {
+	uint32_t x;
+	uint32_t y;
+} Coords;
+
+#define set_c(c,_x,_y); c.x=(_x);c.y=(_y);
+
+typedef struct Rgba {
+	uint16_t r;
+	uint16_t g;
+	uint16_t b;
+	uint16_t a;
+} Rgba;
+
+int ff_print_header(Coords size);
+int ff_print_rgba(Rgba rgba);
 int ff_print_value(uint16_t *value);
 int ff_print_bw(uint16_t *bw_value);
 
@@ -33,3 +47,7 @@ int ff_err_msg(int error, char *message);
 int ff_err(int error);
 
 #define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}
+
+Coords ff_get_rel_coords(Coords pos,
+                         Coords size,
+                         Coords rel_pos);

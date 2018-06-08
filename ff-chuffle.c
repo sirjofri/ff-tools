@@ -6,12 +6,10 @@ int map_rgba[4];
 int main(int argc, char **argv)
 {
 	int ret;
+	Coords size;
 
-	uint32_t hdr[4],
-	         width,
-	         height;
+	uint32_t hdr[4];
 	uint16_t in_pixel[4];
-
 
 	if (argc != 5) {
 		fprintf(stderr, "Usage: %s r g b a\n", argv[0]);
@@ -48,16 +46,15 @@ int main(int argc, char **argv)
 		return USERERR;
 	}
 
-	width = ntohl(hdr[2]);
-	height = ntohl(hdr[3]);
+	set_c(size, ntohl(hdr[2]), ntohl(hdr[3]));
 
-	ret = ff_print_header(&width, &height);
+	ret = ff_print_header(size);
 	if (ret != 0) {
 		ff_err(ret);
 		return ret;
 	}
 
-	FOR_X_Y(width, height,
+	FOR_X_Y(size.x, size.y,
 		if (fread(in_pixel, sizeof(*in_pixel), LEN(in_pixel), stdin) != LEN(in_pixel)) {
 			fprintf(stderr, "Error: can not read input image\n");
 			return READERR;
@@ -74,11 +71,11 @@ int main(int argc, char **argv)
 int
 print_shuffled(uint16_t *pixel)
 {
-	uint16_t shuffled[4];
-	shuffled[0] = pixel[map_rgba[0]];
-	shuffled[1] = pixel[map_rgba[1]];
-	shuffled[2] = pixel[map_rgba[2]];
-	shuffled[3] = pixel[map_rgba[3]];
+	Rgba rgba;
+	rgba.r = pixel[map_rgba[0]];
+	rgba.g = pixel[map_rgba[1]];
+	rgba.b = pixel[map_rgba[2]];
+	rgba.a = pixel[map_rgba[3]];
 
-	return ff_print_rgba(shuffled);
+	return ff_print_rgba(rgba);
 }

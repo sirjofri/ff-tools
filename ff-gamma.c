@@ -6,9 +6,9 @@ void gamma(uint16_t in, uint16_t *out);
 int main(int argc, char **argv)
 {
 	int ret;
-	uint32_t hdr[4],
-	         width,
-	         height;
+	Coords size;
+
+	uint32_t hdr[4];
 	uint16_t result;
 	uint16_t in;
 
@@ -37,16 +37,15 @@ int main(int argc, char **argv)
 		return USERERR;
 	}
 
-	width = ntohl(hdr[2]);
-	height = ntohl(hdr[3]);
+	set_c(size, ntohl(hdr[2]), ntohl(hdr[3]));
 
-	ret = ff_print_header(&width, &height);
+	ret = ff_print_header(size);
 	if (ret != 0) {
 		ff_err(ret);
 		return ret;
 	}
 
-	for(uint32_t x=0; x<height*width*4; x++) {
+	for(uint32_t x=0; x<size.y*size.x*4; x++) {
 		if (fread(&in, sizeof(uint16_t), 1, stdin) != 1) {
 			fprintf(stderr, "Error: can not read input image\n");
 			return READERR;
