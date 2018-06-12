@@ -87,6 +87,9 @@ ff_err(int error)
 	case WRITERR:
 		fprintf(stderr, "Write error\n");
 		return 1;
+	case MEMERR:
+		fprintf(stderr, "Memory error\n");
+		return 1;
 	default:
 		return 0;
 	}
@@ -102,6 +105,16 @@ ff_read_header(Coords *size)
 		return USERERR;
 
 	set_c(*size, ntohl(hdr[2]), ntohl(hdr[3]));
+	return OK;
+}
+
+int
+ff_read_content(uint16_t *target, Coords size)
+{
+	if (target == 0x0)
+		return MEMERR;
+	if (fread(target, sizeof(uint16_t), size.x*size.y*4, stdin) != size.x*size.y*4)
+		return READERR;
 	return OK;
 }
 

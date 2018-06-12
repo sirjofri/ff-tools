@@ -31,6 +31,11 @@ dist: clean
 	@gzip ff-tools-$(VERSION).tar
 	@rm -rf ff-tools-$(VERSION)
 
+.PHONY: test
+test: all
+	@echo " → testing binaries"
+	@./test.sh $(OUT)
+
 $(OUT):
 	@mkdir -p $@
 

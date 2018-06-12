@@ -23,15 +23,20 @@ int main(int argc, char **argv)
 	}
 
 	/* Read A file content */
-	a = (uint16_t *) malloc(a_size.x * a_size.y * sizeof(uint16_t) * 4);
-	if (a == 0x0) {
-		fprintf(stderr, "Error: can not allocate memory\n");
-		return 4;
-	}
-	if (fread(a, sizeof(uint16_t), a_size.x*a_size.y*4, stdin) != a_size.x*a_size.y*4) {
-		fprintf(stderr, "Error: can not read file (A)\n");
+	a = ff_malloc(a_size);
+	ret = ff_read_content(a, a_size);
+	switch (ret) {
+	case MEMERR:
+		ff_err(ret);
+		return MEMERR;
+	case USERERR:
+	case READERR:
+	case WRITERR:
+		ff_err(ret);
 		free(a);
-		return READERR;
+		return ret;
+	default:
+		;
 	}
 
 	if (ff_read_header(&b_size) != OK) {
@@ -46,16 +51,21 @@ int main(int argc, char **argv)
 	}
 
 	/* Read B file content */
-	b = (uint16_t *) malloc(b_size.x * b_size.y * sizeof(uint16_t) * 4);
-	if (b == 0x0) {
-		fprintf(stderr, "Error: can not allocate memory\n");
-		return 4;
-	}
-	if (fread(b, sizeof(uint16_t), b_size.x*b_size.y*4, stdin) != b_size.x*b_size.y*4) {
-		fprintf(stderr, "Error: can not read (B)\n");
+	b = ff_malloc(b_size);
+	ret = ff_read_content(b, b_size);
+	switch (ret) {
+	case MEMERR:
+		ff_err(ret);
+		return MEMERR;
+	case USERERR:
+	case READERR:
+	case WRITERR:
+		ff_err(ret);
 		free(a);
 		free(b);
-		return READERR;
+		return ret;
+	default:
+		;
 	}
 
 	ret = ff_print_header(a_size);

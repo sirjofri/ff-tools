@@ -43,11 +43,14 @@ int ff_print_bw(uint16_t *bw_value);
 #define USERERR 1
 #define READERR 2
 #define WRITERR 3
+#define MEMERR  4
 
 int ff_err_msg(int error, char *message);
 int ff_err(int error);
 
 int ff_read_header(Coords *size);
+#define ff_malloc(size) (uint16_t *)malloc((size).x * (size).y * sizeof(uint16_t)*4);
+int ff_read_content(uint16_t *target, Coords size);
 
 #define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}
 

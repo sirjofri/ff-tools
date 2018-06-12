@@ -13,6 +13,8 @@ tools.h \- ff-tools library functions
 .B READERR
 .br
 .B WRITERR
+.br
+.B MEMERR
 .PP
 .B typedef struct Coords;
 .br
@@ -113,6 +115,12 @@ It creates a pixel with RGBA\ =\ (\fIbw_value\fR, \fIbw_value\fR, \fIbw_value\fR
 reads a header from \fBstdin\fR, validates its magic value ("farbfeld") and puts its size information into the given \fIsize\fR.
 .B ff_read_header()
 returns \fBOK\fR state if everything is ok, or one of the other error values if not.
+.PP
+.B ff_malloc()
+is a macro that provides allocating an image buffer with \fBCoords\fR instead of memory size. Use it instead of \fBmalloc\fR.
+.PP
+.B ff_read_content()
+reads in \fIsize\fR image data from \fBstdin\fR into memory located at \fItarget\fR.
 .PP
 .B ff_get_rel_coords()
 calculates the correct position relative to \fIpos\fB of the image with the given \fIsize\fR and relative coordinates \fIrel_pos\fB. This function is mainly used internally, but you can use it outside as well.
