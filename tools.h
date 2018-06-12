@@ -25,7 +25,7 @@ typedef struct Coords {
 	uint32_t y;
 } Coords;
 
-#define set_c(c,_x,_y); c.x=(_x);c.y=(_y);
+#define set_c(c,_x,_y); (c).x=(_x);(c).y=(_y);
 
 typedef struct Rgba {
 	uint16_t r;
@@ -39,12 +39,15 @@ int ff_print_rgba(Rgba rgba);
 int ff_print_value(uint16_t *value);
 int ff_print_bw(uint16_t *bw_value);
 
+#define OK      0
 #define USERERR 1
 #define READERR 2
 #define WRITERR 3
 
 int ff_err_msg(int error, char *message);
 int ff_err(int error);
+
+int ff_read_header(Coords *size);
 
 #define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}
 

@@ -92,6 +92,19 @@ ff_err(int error)
 	}
 }
 
+int
+ff_read_header(Coords *size)
+{
+	uint32_t hdr[4];
+	if (fread(hdr, sizeof(*hdr), LEN(hdr), stdin) != LEN(hdr))
+		return READERR;
+	if (memcmp("farbfeld", hdr, sizeof("farbfeld") - 1))
+		return USERERR;
+
+	set_c(*size, ntohl(hdr[2]), ntohl(hdr[3]));
+	return OK;
+}
+
 Coords
 ff_get_rel_coords(Coords pos,
                   Coords size,

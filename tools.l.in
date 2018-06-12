@@ -6,6 +6,8 @@ tools.h \- ff-tools library functions
 .PP
 .B M_PI
 .br
+.B OK
+.br
 .B USERERR
 .br
 .B READERR
@@ -29,6 +31,8 @@ tools.h \- ff-tools library functions
 .B int ff_err_msg(int \fIerror\fB, \fBchar *\fImessage\fB);
 .br
 .B int ff_err(int \fIerror\fB);
+.PP
+.B int ff_read_header(Coords *\fIsize\fB);
 .PP
 .B Coords ff_get_rel_coords(Coords \fIpos\fB, Coords \fIsize\fB, Coords \fIrel_pos\fB);
 .PP
@@ -104,6 +108,11 @@ This is useful if you can stream in data, process it channel by channel and outp
 .B ff_print_bw()
 prints the given \fIbw_value\fR as a full pixel.
 It creates a pixel with RGBA\ =\ (\fIbw_value\fR, \fIbw_value\fR, \fIbw_value\fR, \fBUINT16_MAX\fR) and outputs it.
+.PP
+.B ff_read_header()
+reads a header from \fBstdin\fR, validates its magic value ("farbfeld") and puts its size information into the given \fIsize\fR.
+.B ff_read_header()
+returns \fBOK\fR state if everything is ok, or one of the other error values if not.
 .PP
 .B ff_get_rel_coords()
 calculates the correct position relative to \fIpos\fB of the image with the given \fIsize\fR and relative coordinates \fIrel_pos\fB. This function is mainly used internally, but you can use it outside as well.

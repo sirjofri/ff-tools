@@ -8,7 +8,6 @@ int main(int argc, char **argv)
 	int ret;
 	Coords size;
 
-	uint32_t hdr[4];
 	uint16_t result;
 	uint16_t in;
 
@@ -28,16 +27,9 @@ int main(int argc, char **argv)
 		cor = in_cor;
 	}
 
-	if (fread(hdr, sizeof(*hdr), LEN(hdr), stdin) != LEN(hdr)) {
-		fprintf(stderr, "Error: can not read input image\n");
-		return READERR;
+	if (ff_read_header(&size) != OK) {
+		fprintf(stderr, "Error: can not read input.");
 	}
-	if (memcmp("farbfeld", hdr, sizeof("farbfeld") - 1)) {
-		fprintf(stderr, "%s: invalid magic value\n", argv[0]);
-		return USERERR;
-	}
-
-	set_c(size, ntohl(hdr[2]), ntohl(hdr[3]));
 
 	ret = ff_print_header(size);
 	if (ret != 0) {

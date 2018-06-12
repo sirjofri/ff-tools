@@ -7,7 +7,6 @@ int main(int argc, char **argv)
 	int ret;
 	Coords a_size, b_size;
 
-	uint32_t a_hdr[4], b_hdr[4];
 	uint16_t result;
 	uint16_t *a, *b;
 	a = 0x0;
@@ -18,17 +17,10 @@ int main(int argc, char **argv)
 		return USERERR;
 	}
 
-	/* Read A file header */
-	if (fread(a_hdr, sizeof(*a_hdr), LEN(a_hdr), stdin) != LEN(a_hdr)) {
+	if (ff_read_header(&a_size) != OK) {
 		fprintf(stderr, "Error: can not read (A)\n");
 		return READERR;
 	}
-	if (memcmp("farbfeld", a_hdr, sizeof("farbfeld") - 1)) {
-		fprintf(stderr, "%s: invalid magic value (A)\n", argv[0]);
-		return USERERR;
-	}
-
-	set_c(a_size, ntohl(a_hdr[2]), ntohl(a_hdr[3]));
 
 	/* Read A file content */
 	a = (uint16_t *) malloc(a_size.x * a_size.y * sizeof(uint16_t) * 4);
@@ -42,20 +34,10 @@ int main(int argc, char **argv)
 		return READERR;
 	}
 
-	/* Read B file header */
-	if (fread(b_hdr, sizeof(*b_hdr), LEN(b_hdr), stdin) != LEN(b_hdr)) {
+	if (ff_read_header(&b_size) != OK) {
 		fprintf(stderr, "Error: can not read (B)\n");
-		free(a);
 		return READERR;
 	}
-
-	if (memcmp("farbfeld", b_hdr, sizeof("farbfeld") - 1)) {
-		fprintf(stderr, "%s: invalid magic value (B)\n", argv[0]);
-		free(a);
-		return USERERR;
-	}
-
-	set_c(b_size, ntohl(b_hdr[2]), ntohl(b_hdr[3]));
 
 	if (a_size.x != b_size.x || a_size.y != b_size.y) {
 		fprintf(stderr, "%s: different image sizes\n", argv[0]);
