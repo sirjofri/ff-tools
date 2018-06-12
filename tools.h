@@ -54,6 +54,8 @@ int ff_read_content(uint16_t *target, Coords size);
 
 #define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}
 
+Rgba ff_coords(uint16_t *origin, Coords pos);
+uint16_t *ff_coords_ptr(uint16_t *origin, Coords pos);
 Coords ff_get_rel_coords(Coords pos,
                          Coords size,
                          Coords rel_pos);

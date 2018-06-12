@@ -36,6 +36,10 @@ tools.h \- ff-tools library functions
 .PP
 .B int ff_read_header(Coords *\fIsize\fB);
 .PP
+.B Rgba ff_coords(uint16_t *\fIorigin\fB, Coords \fIpos\fB);
+.br
+.B uint16_t *ff_coords_ptr(uint16_t *\fIorigin\fB, Coords \fIpos\fB);
+.br
 .B Coords ff_get_rel_coords(Coords \fIpos\fB, Coords \fIsize\fB, Coords \fIrel_pos\fB);
 .PP
 .B LEN(\fIx\fB)
@@ -121,6 +125,12 @@ is a macro that provides allocating an image buffer with \fBCoords\fR instead of
 .PP
 .B ff_read_content()
 reads in \fIsize\fR image data from \fBstdin\fR into memory located at \fItarget\fR.
+.PP
+.B ff_coords()
+returns the rgba pixel at \fIpos\fR relative to \fIorigin\fR.
+.PP
+.B ff_coords_ptr()
+returns the correct memory location of the red value of the \fIpos\fR pixel relative to \fIorigin\fR.
 .PP
 .B ff_get_rel_coords()
 calculates the correct position relative to \fIpos\fB of the image with the given \fIsize\fR and relative coordinates \fIrel_pos\fB. This function is mainly used internally, but you can use it outside as well.

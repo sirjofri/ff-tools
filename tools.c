@@ -118,6 +118,28 @@ ff_read_content(uint16_t *target, Coords size)
 	return OK;
 }
 
+Rgba
+ff_coords(uint16_t *origin, Coords pos)
+{
+	uint16_t *ptr = ff_coords_ptr(origin, pos);
+	Rgba rgba;
+	rgba.r = ptr[0];
+	rgba.g = ptr[1];
+	rgba.b = ptr[2];
+	rgba.a = ptr[3];
+
+	return rgba;
+}
+
+uint16_t*
+ff_coords_ptr(uint16_t *origin, Coords pos)
+{
+	if (origin == 0x0)
+		return 0x0;
+
+	return origin + pos.x*pos.y*sizeof(uint16_t)*4;
+}
+
 Coords
 ff_get_rel_coords(Coords pos,
                   Coords size,
