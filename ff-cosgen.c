@@ -9,6 +9,8 @@ int main(int argc, char **argv)
 {
 	int ret;
 
+	setvbuf(stdout, 0x0, _IOFBF, BUFSIZ);
+
 	if(argc != 4) {
 		fprintf(stderr, "Usage: %s width height steps\n", argv[0]);
 		return 1;
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
 		}
 	)
 
+	fflush(stdout);
 	return 0;
 }
 

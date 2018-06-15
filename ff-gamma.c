@@ -13,6 +13,8 @@ int main(int argc, char **argv)
 
 	double in_cor;
 
+	setvbuf(stdout, 0x0, _IOFBF, BUFSIZ);
+
 	if (argc > 2) {
 		fprintf(stderr, "Usage: %s\n", argv[0]);
 		return USERERR;
@@ -49,6 +51,8 @@ int main(int argc, char **argv)
 			return ret;
 		}
 	}
+
+	fflush(stdout);
 	return 0;
 }
 

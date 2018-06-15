@@ -10,6 +10,8 @@ int main(int argc, char **argv)
 
 	uint16_t in_pixel[4];
 
+	setvbuf(stdout, 0x0, _IOFBF, BUFSIZ);
+
 	if (argc != 5) {
 		fprintf(stderr, "Usage: %s r g b a\n", argv[0]);
 		return USERERR;
@@ -57,6 +59,8 @@ int main(int argc, char **argv)
 			return ret;
 		}
 	)
+
+	fflush(stdout);
 	return 0;
 }
 

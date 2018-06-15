@@ -10,11 +10,13 @@ This is a collection of tools working with the
 
 Sample image:
 
-    # ( cos * sin ) * color
-    cat <( \
-        cat <(ff-cosgen 512 512 3) \
-            <(ff-singen 512 512 5) | ff-mul) \
-        <( ff-color 512 512 0.8 0.9 0.2) | ff-mul
+```bash
+# ( cos * sin ) * color
+cat <( \
+    cat <(ff-cosgen 512 512 3) \
+        <(ff-singen 512 512 5) | ff-mul) \
+    <( ff-color 512 512 0.8 0.9 0.2) | ff-mul
+```
 
 Generators
 ----------
@@ -41,7 +43,7 @@ General Usage
 -------------
 
 All of these tools have their input via `stdin` and output to `stdout`. So you
-should use the like this:
+should use them like this:
 
     cat image.ff | ff-tool [parameters] | viewer
 
@@ -50,7 +52,45 @@ For example to view a `.png` file with lel and basic gamma applied:
     cat file.png | png2ff | ff-gamma | lel
 
 (assuming you have [farbfeld](https://tools.suckless.org/farbfeld/) and
-[lel](http://git.2f30.org/lel/) installed)
+[lel](http://git.2f30.org/lel/) installed.)
+
+Scripting
+---------
+
+**ff-tools** is created with scripting in mind. You can easily write scripts
+to automatically perform tasks and profit from various scripting techniques
+like variables, etc. Here is an example:
+
+```bash
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+	SCALE=4
+else
+	SCALE=$1
+fi
+
+SIZE=256
+S=$(($SIZE*$SCALE))
+REP=35
+
+TMP=$(mktemp -d)
+sin=$TMP/sin
+cos=$TMP/cos
+mul=$TMP/mul
+col=$TMP/col
+result=$TMP/result
+
+ff-singen $S $S $REP >$sin
+ff-cosgen $S $S $(($REP+4)) >$cos
+ff-color $S $S 0.8 0.7 1.0 >$col
+
+cat $sin $cos | ff-mul >$mul
+cat $mul $col | ff-mul >$result
+
+cat $TMP/result
+rm -Rf $TMP
+```
 
 Generators
 ----------

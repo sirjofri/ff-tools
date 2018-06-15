@@ -11,6 +11,8 @@ int main(int argc, char **argv)
 	int ret;
 	Coords size;
 
+	setvbuf(stdout, 0x0, _IOFBF, BUFSIZ);
+
 	if (argc < 6 || argc > 7) {
 		fprintf(stderr, "Usage: %s width height red green blue [alpha]\n", argv[0]);
 		return USERERR;
@@ -48,6 +50,8 @@ int main(int argc, char **argv)
 			return ret;
 		}
 	)
+
+	fflush(stdout);
 	return 0;
 }
 
