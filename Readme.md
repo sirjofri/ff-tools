@@ -6,21 +6,14 @@ ff-tools
 This is a collection of tools working with the
 [farbfeld](https://tools.suckless.org/farbfeld/) image file format.
 
-![Sample image](demo.png)
+![Demo image](demo.png)
 
-Sample image:
-
-```bash
-# ( cos * sin ) * color
-cat <( \
-    cat <(ff-cosgen 512 512 3) \
-        <(ff-singen 512 512 5) | ff-mul) \
-    <( ff-color 512 512 0.8 0.9 0.2) | ff-mul
-```
+(Code: `demo.sh`)
 
 Generators
 ----------
 
+- `ff-glow` A circle glow calculator
 - `ff-color` A static color generator
 - `ff-cosgen` A cos-wave generator (x-direction)
 - `ff-singen` A sinewave generator (x-direction)
@@ -28,8 +21,10 @@ Generators
 Functions
 ---------
 
+- `ff-add` Add two images
 - `ff-chuffle` A channel shuffler
 - `ff-mul` A multiplication tool
+- `ff-sub` Subtract: `<first image> - <second image>`
 
 Corrections
 -----------
@@ -98,6 +93,7 @@ Generators
 Generators do not have input images, they just produce images from scratch
 (and a few parameters).
 
+- `ff-glow size`. Output: Image (size x size)
 - `ff-color width height red green blue [alpha]`. Output: Image (width x
   height)
 - `ff-cosgen width height steps`. Output: Image (width x height)
@@ -113,10 +109,18 @@ Functions
   - `cat image.ff | ff-chuffle g b r a > result.ff` (rotates rgb)
   - `cat image.ff | ff-chuffle g g r a > result.ff` (fill more channels,
     discard others)
+- `ff-add`.  
+  Input: Two images with the exact same size.  
+  Output: Addition result.  
+  Example: `cat a.ff b.ff | ff-add > result.ff`
 - `ff-mul`.  
   Input: Two images with the exact same size.  
   Output: Multiplication result.  
   Example: `cat a.ff b.ff | ff-mul > result.ff`
+- `ff-sub`.  
+  Input: Two images with the exact same size.  
+  Output: Subtraction result.  
+  Example: `cat a.ff b.ff | ff-sub > result.ff`
 
 Corrections
 -----------

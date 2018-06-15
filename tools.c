@@ -159,3 +159,9 @@ ff_get_rel_coords(Coords pos,
 
 	return c;
 }
+
+double
+ff_clamp(double value)
+{
+	return value > 0 ? (value > 1 ? 1.0 : value) : 0;
+}

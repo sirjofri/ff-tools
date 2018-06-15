@@ -4,7 +4,7 @@ VERSION=0.01pre01
 DATE=June 06, 2018
 
 CFLAGS_ADD= -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic
-TOOLS=ff-chuffle ff-color ff-cosgen ff-gamma ff-mul ff-singen
+TOOLS=ff-chuffle ff-color ff-cosgen ff-gamma ff-mul ff-add ff-sub ff-singen ff-glow
 DEPS= tools.h
 
 .PHONY: all
@@ -35,6 +35,10 @@ dist: clean
 test: all
 	@echo " → testing binaries"
 	@./test.sh $(OUT)
+
+demo.png: demo.sh
+	@echo " → creating $@"
+	@./$< $(OUT) | ff2png > $@
 
 $(OUT):
 	@mkdir -p $@

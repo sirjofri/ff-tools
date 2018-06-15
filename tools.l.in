@@ -42,6 +42,8 @@ tools.h \- ff-tools library functions
 .br
 .B Coords ff_get_rel_coords(Coords \fIpos\fB, Coords \fIsize\fB, Coords \fIrel_pos\fB);
 .PP
+.B double ff_clamp(double \fIvalue\fB);
+.PP
 .B LEN(\fIx\fB)
 .br
 .B FOR_X_Y(\fIwidth\fR, \fIheight\fR, fIbody\fB)
@@ -134,6 +136,9 @@ returns the correct memory location of the red value of the \fIpos\fR pixel rela
 .PP
 .B ff_get_rel_coords()
 calculates the correct position relative to \fIpos\fB of the image with the given \fIsize\fR and relative coordinates \fIrel_pos\fB. This function is mainly used internally, but you can use it outside as well.
+.PP
+.B ff_clamp()
+clamps the given double value to [0..1] and returns the clamped value. This is espacially helpful in preventing overflows when multiplying with \fBUINT16_MAX\fR.
 .SH NOTES
 This library is in heavy development and can change every day!
 .SH BUGS

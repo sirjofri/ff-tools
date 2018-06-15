@@ -59,3 +59,5 @@ uint16_t *ff_coords_ptr(uint16_t *origin, Coords pos);
 Coords ff_get_rel_coords(Coords pos,
                          Coords size,
                          Coords rel_pos);
+
+double ff_clamp(double value);
