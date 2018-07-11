@@ -118,6 +118,31 @@ ff_read_content(uint16_t *target, Coords size)
 	return OK;
 }
 
+int
+ff_read_rgba_content(Rgba *target, Coords size)
+{
+	if (target == 0x0)
+		return MEMERR;
+	
+	uint16_t *buf = ff_malloc(size);
+	if (fread(buf, sizeof(uint16_t), size.x*size.y*4, stdin) != size.x*size.y*4) {
+		free(buf);
+		return READERR;
+	}
+
+	FOR_X_Y(size.x, size.y,
+		Rgba rgba;
+		rgba.r = buf[size.x*y + x*4*sizeof(uint16_t) + 0*sizeof(uint16_t)];
+		rgba.g = buf[size.x*y + x*4*sizeof(uint16_t) + 1*sizeof(uint16_t)];
+		rgba.b = buf[size.x*y + x*4*sizeof(uint16_t) + 2*sizeof(uint16_t)];
+		rgba.a = buf[size.x*y + x*4*sizeof(uint16_t) + 3*sizeof(uint16_t)];
+		target[size.x*y + x] = rgba;
+	)
+	
+	free(buf);
+	return OK;
+}
+
 Rgba
 ff_coords(uint16_t *origin, Coords pos)
 {
@@ -160,8 +185,35 @@ ff_get_rel_coords(Coords pos,
 	return c;
 }
 
+// TODO
+void
+ff_kernelize(RgbaD kernel, Coords kernelsize,
+             Rgba src, Coords src_size,
+             Rgba dst, Coords dst_size);
+
 double
 ff_clamp(double value)
 {
 	return value > 0 ? (value > 1 ? 1.0 : value) : 0;
+}
+
+RgbaD
+ff_i2d(Rgba rgba)
+{
+	RgbaD rtn;
+	rtn.r = rgba.r / UINT16_MAX;
+	rtn.g = rgba.g / UINT16_MAX;
+	rtn.b = rgba.b / UINT16_MAX;
+	rtn.a = rgba.a / UINT16_MAX;
+	return rtn;
+}
+
+Rgba
+ff_d2i(RgbaD rgbad)
+{
+	Rgba rtn;
+	rtn.r = rgbad.r * UINT16_MAX;
+	rtn.g = rgbad.g * UINT16_MAX;
+	rtn.b = rgbad.b * UINT16_MAX;
+	return rtn;
 }

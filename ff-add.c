@@ -1,14 +1,15 @@
 #include "tools.h"
 
-void add(uint16_t a, uint16_t b, uint16_t *c);
+void add(Rgba a, Rgba b, Rgba *c);
 
 int main(int argc, char **argv)
 {
 	int ret;
 	Coords a_size, b_size;
 
-	uint16_t result;
-	uint16_t *a, *b;
+	Rgba result;
+
+	Rgba *a, *b;
 	a = 0x0;
 	b = 0x0;
 
@@ -25,10 +26,11 @@ int main(int argc, char **argv)
 	}
 
 	/* Read A file content */
-	a = ff_malloc(a_size);
-	ret = ff_read_content(a, a_size);
+	a = malloc(a_size.x * a_size.y * sizeof(struct Rgba));
+	ret = ff_read_rgba_content(a, a_size);
 	switch (ret) {
 	case MEMERR:
+		free(a);
 		ff_err(ret);
 		return MEMERR;
 	case USERERR:
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
 
 	if (ff_read_header(&b_size) != OK) {
 		fprintf(stderr, "Error: can not read (B)\n");
+		free(a);
 		return READERR;
 	}
 
@@ -53,11 +56,14 @@ int main(int argc, char **argv)
 	}
 
 	/* Read B file content */
-	b = ff_malloc(b_size);
-	ret = ff_read_content(b, b_size);
+	b = malloc(b_size.x * b_size.y * sizeof(struct Rgba));
+	//ret = ff_read_content(b, b_size);
+	ret = ff_read_rgba_content(b, b_size);
 	switch (ret) {
 	case MEMERR:
 		ff_err(ret);
+		free(a);
+		free(b);
 		return MEMERR;
 	case USERERR:
 	case READERR:
@@ -77,16 +83,15 @@ int main(int argc, char **argv)
 		return ret;
 	}
 
-	/* Calculate and output data */
-	for(uint32_t x=0; x<a_size.y*a_size.x*2*sizeof(uint16_t); x++) {
-		add(ntohs(*(a+x)), ntohs(*(b+x)), &result);
-		ret = ff_print_value(&result);
+	FOR_X_Y(a_size.x, a_size.y,
+		add(a[a_size.x*y + x], b[a_size.x*y + x], &result);
+		ret = ff_print_rgba(result);
 		if (ff_err(ret) != 0) {
 			free(a);
 			free(b);
 			return ret;
 		}
-	}
+	)
 
 	free(a);
 	free(b);
@@ -95,10 +100,16 @@ int main(int argc, char **argv)
 }
 
 void
-add(uint16_t a,        // Source A
-    uint16_t b,        // Source B
-    uint16_t *c)       // Target C
+add(Rgba a,        // Source A
+    Rgba b,        // Source B
+    Rgba *c)       // Target C
 {
-	double value = (double)a/UINT16_MAX + (double)b/UINT16_MAX;
-	*c = ff_clamp(value) * UINT16_MAX;
+	double r_val = (double)(a.r)/UINT16_MAX + (double)(b.r)/UINT16_MAX;
+	double g_val = (double)(a.g)/UINT16_MAX + (double)(b.g)/UINT16_MAX;
+	double b_val = (double)(a.b)/UINT16_MAX + (double)(b.b)/UINT16_MAX;
+	double a_val = (double)(a.a)/UINT16_MAX + (double)(b.a)/UINT16_MAX;
+	c->r = ff_clamp(r_val) * UINT16_MAX;
+	c->g = ff_clamp(g_val) * UINT16_MAX;
+	c->b = ff_clamp(b_val) * UINT16_MAX;
+	c->a = ff_clamp(a_val) * UINT16_MAX;
 }

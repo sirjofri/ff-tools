@@ -21,6 +21,8 @@ tools.h \- ff-tools library functions
 .B set_c(\fICoords\fB, \fIuint32_t x\fB, \fIuint32_t y\fB);
 .br
 .B typedef struct Rgba;
+.br
+.B typedef struct RgbaD;
 .PP
 .B int ff_print_header(Coords \fIsize\fB);
 .br
@@ -30,11 +32,15 @@ tools.h \- ff-tools library functions
 .br
 .B int ff_print_bw(uint16_t *\fIbw_value\fB);
 .PP
-.B int ff_err_msg(int \fIerror\fB, \fBchar *\fImessage\fB);
+.B int ff_err_msg(int \fIerror\fB, char *\fImessage\fB);
 .br
 .B int ff_err(int \fIerror\fB);
 .PP
 .B int ff_read_header(Coords *\fIsize\fB);
+.br
+.B int ff_read_content(uint16_t *\fItarget\fB, Coords \fIsize\fB);
+.br
+.B int ff_read_rgba_content(Rgba *\fItarget\fB, Coords \fIsize\fB);
 .PP
 .B Rgba ff_coords(uint16_t *\fIorigin\fB, Coords \fIpos\fB);
 .br
@@ -127,6 +133,9 @@ is a macro that provides allocating an image buffer with \fBCoords\fR instead of
 .PP
 .B ff_read_content()
 reads in \fIsize\fR image data from \fBstdin\fR into memory located at \fItarget\fR.
+.PP
+.B ff_read_rgba_content()
+reads in \fIsize\fR image data from \fbstdin\fR into an \fBRgba\fR memory buffer at location \fItarget\fR. You can then use \fIx\fR and \fIy\fR coordinates to access these pixels (target[width*y + x].r, target[width*y + x].g, etc.).
 .PP
 .B ff_coords()
 returns the rgba pixel at \fIpos\fR relative to \fIorigin\fR.

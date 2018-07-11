@@ -34,6 +34,13 @@ typedef struct Rgba {
 	uint16_t a;
 } Rgba;
 
+typedef struct RgbaD {
+	double r;
+	double g;
+	double b;
+	double a;
+} RgbaD;
+
 int ff_print_header(Coords size);
 int ff_print_rgba(Rgba rgba);
 int ff_print_value(uint16_t *value);
@@ -51,6 +58,7 @@ int ff_err(int error);
 int ff_read_header(Coords *size);
 #define ff_malloc(size) (uint16_t *)malloc((size).x * (size).y * sizeof(uint16_t)*4);
 int ff_read_content(uint16_t *target, Coords size);
+int ff_read_rgba_content(Rgba *target, Coords size);
 
 #define FOR_X_Y(width, height, body) for(uint32_t y=0; y<height; y++) for(uint32_t x=0; x<width; x++) {body}
 
@@ -60,4 +68,11 @@ Coords ff_get_rel_coords(Coords pos,
                          Coords size,
                          Coords rel_pos);
 
+void ff_kernelize(RgbaD kernel, Coords kernelsize,
+                  Rgba src, Coords src_size,
+                  Rgba dst, Coords dst_size);
+
 double ff_clamp(double value);
+
+RgbaD ff_i2d(Rgba rgba);
+Rgba ff_d2i(RgbaD rgbad);
