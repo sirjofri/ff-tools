@@ -22,6 +22,12 @@ clean:
 	@rm -rf $(OUT) 2>/dev/null >/dev/null
 	@echo " → Cleaned workspace directory"
 
+install: $(addprefix $(PREFIX)/bin/,$(TOOLS))
+
+$(PREFIX)/bin/%: $(OUT)/%.o tools.o
+	@$(CC) $(LIBS) $(CFLAGS) $(CFLAGS_ADD) -o $@ $< tools.o
+	@echo " → Installed tools"
+
 .PHONY: dist
 dist: clean
 	@echo " → make distribution pack"
