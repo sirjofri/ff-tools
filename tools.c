@@ -130,13 +130,13 @@ ff_read_rgba_content(Rgba *target, Coords size)
 		return READERR;
 	}
 
-	FOR_X_Y(size.x, size.y,
+	FOR_POS(size,
 		Rgba rgba;
-		rgba.r = buf[size.x*y + x*4*sizeof(uint16_t) + 0*sizeof(uint16_t)];
-		rgba.g = buf[size.x*y + x*4*sizeof(uint16_t) + 1*sizeof(uint16_t)];
-		rgba.b = buf[size.x*y + x*4*sizeof(uint16_t) + 2*sizeof(uint16_t)];
-		rgba.a = buf[size.x*y + x*4*sizeof(uint16_t) + 3*sizeof(uint16_t)];
-		target[size.x*y + x] = rgba;
+		rgba.r = buf[pos*4 + 0];
+		rgba.g = buf[pos*4 + 1];
+		rgba.b = buf[pos*4 + 2];
+		rgba.a = buf[pos*4 + 3];
+		target[pos] = rgba;
 	)
 	
 	free(buf);
@@ -201,10 +201,10 @@ RgbaD
 ff_i2d(Rgba rgba)
 {
 	RgbaD rtn;
-	rtn.r = rgba.r / UINT16_MAX;
-	rtn.g = rgba.g / UINT16_MAX;
-	rtn.b = rgba.b / UINT16_MAX;
-	rtn.a = rgba.a / UINT16_MAX;
+	rtn.r = (double)rgba.r / UINT16_MAX;
+	rtn.g = (double)rgba.g / UINT16_MAX;
+	rtn.b = (double)rgba.b / UINT16_MAX;
+	rtn.a = (double)rgba.a / UINT16_MAX;
 	return rtn;
 }
 

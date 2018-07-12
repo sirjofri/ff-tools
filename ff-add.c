@@ -57,7 +57,6 @@ int main(int argc, char **argv)
 
 	/* Read B file content */
 	b = malloc(b_size.x * b_size.y * sizeof(struct Rgba));
-	//ret = ff_read_content(b, b_size);
 	ret = ff_read_rgba_content(b, b_size);
 	switch (ret) {
 	case MEMERR:
@@ -83,8 +82,8 @@ int main(int argc, char **argv)
 		return ret;
 	}
 
-	FOR_X_Y(a_size.x, a_size.y,
-		add(a[a_size.x*y + x], b[a_size.x*y + x], &result);
+	FOR_POS(a_size,
+		add(a[pos], b[pos], &result);
 		ret = ff_print_rgba(result);
 		if (ff_err(ret) != 0) {
 			free(a);
@@ -104,10 +103,12 @@ add(Rgba a,        // Source A
     Rgba b,        // Source B
     Rgba *c)       // Target C
 {
-	double r_val = (double)(a.r)/UINT16_MAX + (double)(b.r)/UINT16_MAX;
-	double g_val = (double)(a.g)/UINT16_MAX + (double)(b.g)/UINT16_MAX;
-	double b_val = (double)(a.b)/UINT16_MAX + (double)(b.b)/UINT16_MAX;
-	double a_val = (double)(a.a)/UINT16_MAX + (double)(b.a)/UINT16_MAX;
+	RgbaD ad = ff_i2d(a);
+	RgbaD bd = ff_i2d(b);
+	double r_val = ad.r + bd.r;
+	double g_val = ad.g + bd.g;
+	double b_val = ad.b + bd.b;
+	double a_val = ad.a + bd.a;
 	c->r = ff_clamp(r_val) * UINT16_MAX;
 	c->g = ff_clamp(g_val) * UINT16_MAX;
 	c->b = ff_clamp(b_val) * UINT16_MAX;
