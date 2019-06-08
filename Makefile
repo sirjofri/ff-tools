@@ -3,8 +3,8 @@ include config.mk
 VERSION=0.01pre01
 DATE=June 06, 2018
 
-CFLAGS_ADD= -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic
-TOOLS=ff-chuffle ff-color ff-cosgen ff-gamma ff-mul ff-add ff-sub ff-singen ff-glow
+CFLAGS_ADD= -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Wall -g
+TOOLS=$(shell ls ff-*.c | sed 's/\.c//g')
 DEPS= tools.h
 
 .PHONY: all

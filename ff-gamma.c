@@ -60,5 +60,5 @@ void
 gamma(uint16_t in,
       uint16_t *out)
 {
-	*out = pow(((double)in/UINT16_MAX), 1.0/cor) * UINT16_MAX;
+	*out = pow(((double)ntohs(in)/UINT16_MAX), 1.0/cor) * UINT16_MAX;
 }
